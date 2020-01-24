@@ -16,13 +16,13 @@ Done!
 ![image](https://user-images.githubusercontent.com/22657154/72688313-6d722700-3b0e-11ea-95f6-2d27519ca9fd.png)
 
 ### Features 
-#### Disassemble undefined instructions
+#### Disassemble missed instructions
 ![72688789-73b6d200-3b13-11ea-9120-5ee1b4f68b1b](https://user-images.githubusercontent.com/22657154/72689004-6dc1f080-3b15-11ea-8180-0dc1d10c74d0.png)
 
-#### Detect and fix undefined functions
+#### Detect and fix missed functions
 ![image](https://user-images.githubusercontent.com/22657154/72689012-83cfb100-3b15-11ea-9dc2-90d4e54f8d26.png)
 
-#### Fix undefined datatypes
+#### Fix 'undefined' datatypes
 ![image](https://user-images.githubusercontent.com/22657154/72689156-2b99ae80-3b17-11ea-8a58-1daeede847b4.png)
 
 #### Set MSDN API info as comments
@@ -40,7 +40,7 @@ Done!
 #### Detect and label crypto constants
 ![image](https://user-images.githubusercontent.com/22657154/72991808-54fa5900-3dfb-11ea-8fc8-fc1e312b6546.png)
 
-#### Detect and label stack strings
+#### Detect and comment stack strings
 ![image](https://user-images.githubusercontent.com/22657154/72989797-a4d72100-3df7-11ea-8449-45ee8e3347e9.png)
 
 #### Detect and label indirect string references
