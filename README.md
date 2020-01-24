@@ -53,4 +53,4 @@ Done!
 ![image](https://user-images.githubusercontent.com/22657154/73029551-6a45a680-3e40-11ea-83fb-a60800985146.png)
 
 ## BUG? OPEN NEW ISSUE   
-https://github.com/rebellionil/replica/issues
+https://github.com/reb311ion/replica/issues
