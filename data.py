@@ -2443,5 +2443,3 @@ apiTags = {
 	"CriticalSection":     ["DeleteCriticalSection", "EnterCriticalSection", "InitializeCriticalSection", "InitializeCriticalSectionAndSpinCount",
                             "LeaveCriticalSection", "SetCriticalSectionSpinCount", "TryEnterCriticalSection"]
 }
-
-dbPath = r'C:\Users\rebellion\ghidra_scripts\db.json'
