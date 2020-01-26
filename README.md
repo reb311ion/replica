@@ -49,7 +49,7 @@ Done!
 #### Detect and label indirect function calls
 ![image](https://user-images.githubusercontent.com/22657154/73029636-99f4ae80-3e40-11ea-9149-46d4c536dcb0.png)
 
-#### Rename Functions Based on string refrences
+#### Rename Functions Based on string references
 ![image](https://user-images.githubusercontent.com/22657154/73029551-6a45a680-3e40-11ea-83fb-a60800985146.png)
 
 ## BUG? OPEN NEW ISSUE   
