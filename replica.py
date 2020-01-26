@@ -589,7 +589,7 @@ if __name__ == '__main__':
 		                       "Tag Functions based on API calls", "Detect and mark wrapper functions",
 		                       "Fix undefined data and strings", "Detect and label crypto constants",
 		                       "Detect and comment stack strings","Detect and label indirect string references",
-		                       "Detect and label indirect function calls","Rename Functions Based on string refrences"])
+		                       "Detect and label indirect function calls","Rename Functions Based on string references"])
 
 		if 0 in choices:
 			fixMissingDisassembly()
