@@ -7,7 +7,6 @@
 import re
 import json 
 import struct
-import java.util.ArrayList as ArrayList
 import ghidra.app.plugin.core.analysis.ReferenceAddressPair
 import ghidra.app.script.GhidraScript
 import ghidra.program.model.address.Address
@@ -15,15 +14,17 @@ import ghidra.program.model.mem.Memory
 import ghidra.program.util.ProgramMemoryUtil
 import ghidra.util.exception.CancelledException
 import ghidra.util.task.TaskMonitor
+import java.util.ArrayList as ArrayList
 import ghidra.program.util.ProgramMemoryUtil as ProgramMemoryUtil
+import ghidra.app.plugin.core.analysis.AutoAnalysisManager as AutoAnalysisManager
 from ghidra.program.model.listing import * 
 from ghidra.program.model.symbol import * 
 from java.util import * 
+from time import sleep
 from ghidra.program.model.symbol.SourceType import *
 from ghidra.app.decompiler import DecompInterface
 from ghidra.util.task import ConsoleTaskMonitor
 from ghidra.program.model.address.Address import *
-from ghidra.program.model.listing.CodeUnit import *
 from ghidra.app.script import GhidraScript
 from ghidra.app.services import DataTypeManagerService
 from ghidra.framework.plugintool import PluginTool
@@ -42,6 +43,7 @@ from ghidra.program.model.symbol import FlowType
 from data import *
 from ghidra.program.model.symbol.SourceType import *
 from ghidra.program.model.symbol.SymbolUtilities import *
+
 
 try: 
 	open(dbPath).read()
@@ -270,16 +272,15 @@ def fixUndefinedDataTypes():
 	monitor.setMessage("Fixing Undefined Data Types")	
 	function =  getFirstFunction()
 	while function is not None:
-		if function.getName().startswith("FUN_"):
-			for var in function.getAllVariables():
-				varBefore = str(var)
-				dt = str(var.getDataType())
-				if "undefined" in dt:
-					dt = dt.replace("undefined","")
-					dt = getDataTypeWrap(dt)
-					if dt:
-						var.setDataType(dt,USER_DEFINED)
-						print "[+] " + str(function.getName()) + ": " + varBefore + " -> " + str(dt)
+		for var in function.getAllVariables():
+			varBefore = str(var)
+			dt = str(var.getDataType())
+			if "undefined" in dt:
+				dt = dt.replace("undefined","")
+				dt = getDataTypeWrap(dt)
+				if dt:
+					var.setDataType(dt,USER_DEFINED)
+					print "[+] " + str(function.getName()) + ": " + varBefore + " -> " + str(dt)
 		function = getFunctionAfter(function)
 	return 0
 
@@ -367,7 +368,7 @@ def tagFunctions():
 				for tag in apiTags.keys():
 					for value in apiTags[tag]:
 						if value in str(calledFunction):
-							tagName = "rep_" + tag + "_" + str(function.getEntryPoint()) + "_" 
+							tagName = "rep__" + tag + "_" + str(function.getEntryPoint()) + "_" 
 				if tagName == "":
 					tagName = "rep_" + str(function.getEntryPoint()) + "_"
 				if not "FUN_" in str(calledFunction) and not "rep_" in str(calledFunction):				
@@ -399,6 +400,40 @@ def detectWrapperFunctions():
 			function = getFunctionAfter(function)
 	return 0
 
+def cleanUpDisassembly():
+	monitor.setMessage("Cleaning Up Disassembly")
+	bmgr        = currentProgram.getBookmarkManager()
+	listing     = currentProgram.getListing()
+	previousSet = None
+	while (True):
+		badAddr = bmgr.getBookmarkAddresses("Error")
+		bai = badAddr.getAddresses(True)
+		while (bai.hasNext()):
+			ba = bai.next()
+			bm = bmgr.getBookmark(ba, "Error", "Bad Instruction")
+			if (bm != None):
+				contextReg = currentProgram.getProgramContext().getRegister("TMode")
+				baEnd = ba
+				if (listing.getCodeUnitAt(ba) != None):
+					baEnd = listing.getCodeUnitAt(ba).getMaxAddress()
+				while (getDataContaining(baEnd.add(4)) != None):
+					baEnd = getDataContaining(baEnd.add(4)).getMaxAddress()
+				while (getDataContaining(ba.subtract(1)) != None):
+					ba = getDataContaining(ba.subtract(1)).getAddress()
+				listing.clearCodeUnits(ba, baEnd, False)
+				if (contextReg != None):
+					paddr = listing.getInstructionBefore(ba).getAddress()
+					if (paddr != None):
+						rv = currentProgram.getProgramContext().getRegisterValue(contextReg,paddr)
+						currentProgram.getProgramContext().setRegisterValue(ba, baEnd, rv)
+				bmgr.removeBookmark(bm)
+
+		while (AutoAnalysisManager.getAnalysisManager(currentProgram).isAnalyzing()):
+			sleep(500)
+		if (badAddr.equals(previousSet)):
+			break
+		previousSet = badAddr
+
 def fixMissingDisassembly():
 	monitor.setMessage("Fixing missing instructions")
 	memoryBlocks = getCurrentProgram().getMemory().getBlocks()
@@ -411,6 +446,7 @@ def fixMissingDisassembly():
 				alignment = currentProgram.getLanguage().getInstructionAlignment()
 				if getInstructionAt(addr) == None and addr.offset % alignment == 0:
 					disassemble(addr)
+	cleanUpDisassembly()
 
 def setApiInfoComment():
 	db = open(dbPath).read()
@@ -487,7 +523,7 @@ def renameFunctionsBasedOnStrRef():
                             if len(name) < 3:
                                 continue
                             name = re.sub(r'[^a-zA-Z0-9_.]+','',name[:50])
-                            functionName = "rep_fun_" + str(function.getEntryPoint()) + "_s_" +  name 
+                            functionName = "rep_" + str(function.getEntryPoint()) + "_s_" +  name 
                             print "[+] " + function.getName() + " -> " + functionName             
                             function.setName(functionName,USER_DEFINED)
                             break
@@ -584,12 +620,12 @@ if __name__ == '__main__':
 
 		choices = askChoices("Choices 2", "Please choose from Analysis Options.", 
 		                      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-		                      ["Disassemble missed instructions", "Detect and fix missed functions",
-		                       "Fix 'undefined' datatypes","Set MSDN API info as comments", 
+		                      ["Disassemble undefined instructions", "Detect and fix undefined functions",
+		                       "Fix undefined datatypes","Set MSDN API info as comments", 
 		                       "Tag Functions based on API calls", "Detect and mark wrapper functions",
 		                       "Fix undefined data and strings", "Detect and label crypto constants",
-		                       "Detect and comment stack strings","Detect and label indirect string references",
-		                       "Detect and label indirect function calls","Rename Functions Based on string references"])
+		                       "Detect and label stack strings","Detect and label indirect string references",
+		                       "Detect and label indirect function calls","Rename Functions Based on string refrences"])
 
 		if 0 in choices:
 			fixMissingDisassembly()
@@ -617,4 +653,4 @@ if __name__ == '__main__':
 			renameFunctionsBasedOnStrRef()
 
 	except IllegalArgumentException as error:
-	    Msg.warn(self, "Error during headless processing: " + error.toString())
+	    print error.toString()
