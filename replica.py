@@ -620,12 +620,12 @@ if __name__ == '__main__':
 
 		choices = askChoices("Choices 2", "Please choose from Analysis Options.", 
 		                      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-		                      ["Disassemble undefined instructions", "Detect and fix undefined functions",
+		                      ["Disassemble missed  instructions", "Detect and fix missed  functions",
 		                       "Fix undefined datatypes","Set MSDN API info as comments", 
 		                       "Tag Functions based on API calls", "Detect and mark wrapper functions",
 		                       "Fix undefined data and strings", "Detect and label crypto constants",
-		                       "Detect and label stack strings","Detect and label indirect string references",
-		                       "Detect and label indirect function calls","Rename Functions Based on string refrences"])
+		                       "Detect and comment stack strings","Detect and label indirect string references",
+		                       "Detect and label indirect function calls","Rename Functions Based on string references"])
 
 		if 0 in choices:
 			fixMissingDisassembly()
