@@ -2767,6 +2767,3 @@ stringHint = {
                              'Beds-Protector-v7.0','ENIGMA','Enigma Protector1']
 
 }
-
-
-dbPath = r'C:\Users\rebellion\ghidra_scripts\db.json'
