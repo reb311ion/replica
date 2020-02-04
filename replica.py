@@ -633,7 +633,7 @@ def bookMarkStringHints():
 		strType  = data.getDataType().getName().lower()
 		matchStr = data.getValue()
 		bmb      = False
-		if ("unicode" in strType or "string" in strType):
+		if ("unicode" in strType or "string" in strType) and matchStr:
 			for hint in stringHint.keys():
 				for value in stringHint[hint]:
 					if hint == "Extension Hint":
@@ -641,7 +641,7 @@ def bookMarkStringHints():
 							createBookMark(data.getAddress(),"Replica",hint)
 							print "[+] " + hint + ": " + repr(matchStr)				 
 					else:
-					    if value == matchStr or (len(value) >= 6 and value in matchStr):
+						if value == matchStr or (len(value) >= 6 and value in matchStr):
 							createBookMark(data.getAddress(),"Replica",hint)
 							print "[+] " + hint + ": " + repr(matchStr)						    	
 
