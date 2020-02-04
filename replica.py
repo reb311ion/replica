@@ -427,7 +427,8 @@ def cleanUpDisassembly():
 						rv = currentProgram.getProgramContext().getRegisterValue(contextReg,paddr)
 						currentProgram.getProgramContext().setRegisterValue(ba, baEnd, rv)
 				bmgr.removeBookmark(bm)
-
+		else:
+			break
 		while (AutoAnalysisManager.getAnalysisManager(currentProgram).isAnalyzing()):
 			sleep(500)
 		if (badAddr.equals(previousSet)):
@@ -472,8 +473,8 @@ def detectIndirectStringReferences():
 	dataIterator = listing.getDefinedData(True)
 	while (dataIterator.hasNext() and not monitor.isCancelled()):
 		nextData = dataIterator.next()
-		type = nextData.getDataType().getName().lower()
-		if ("unicode" in type or "string" in type):
+		strType = nextData.getDataType().getName().lower()
+		if ("unicode" in strType or "string" in strType):
 			strAddrSet.add(nextData.getMinAddress())
 	if (strAddrSet.size() == 0):
 		popup("No strings found.  Try running 'Search -> For Strings...' first.")
@@ -615,17 +616,51 @@ def fixUndefinedData():
             except:
                 continue
 
+def createBookMark(addr,category,description):
+    bm = currentProgram.getBookmarkManager()
+    bm.setBookmark(addr,"Info",category,description)
+
+def bookMarkStringHints():
+	monitor.setMessage("Book Marking String Hint")	
+	listing      = currentProgram.getListing()
+	memory       = currentProgram.getMemory()
+	symbolTable  = currentProgram.getSymbolTable()
+	monitor.setMessage("BookMarking Intersting Strings [Hints]")
+	strAddrSet   = ArrayList()
+	dataIterator = listing.getDefinedData(True)
+	while (dataIterator.hasNext() and not monitor.isCancelled()):
+		data     = dataIterator.next()
+		strType  = data.getDataType().getName().lower()
+		matchStr = data.getValue()
+		bmb      = False
+		if ("unicode" in strType or "string" in strType):
+			for hint in stringHint.keys():
+				for value in stringHint[hint]:
+					if hint == "Extension Hint":
+						if matchStr.endswith(value) or (value + " ") in matchStr:
+							createBookMark(data.getAddress(),"Replica",hint)
+							print "[+] " + hint + ": " + repr(matchStr)				 
+					else:
+					    if value == matchStr or (len(value) >= 6 and value in matchStr):
+							createBookMark(data.getAddress(),"Replica",hint)
+							print "[+] " + hint + ": " + repr(matchStr)						    	
+
+
+
+	return 0
+
 if __name__ == '__main__':
 	try:
 
 		choices = askChoices("Choices 2", "Please choose from Analysis Options.", 
-		                      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+		                      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
 		                      ["Disassemble missed  instructions", "Detect and fix missed  functions",
 		                       "Fix undefined datatypes","Set MSDN API info as comments", 
 		                       "Tag Functions based on API calls", "Detect and mark wrapper functions",
 		                       "Fix undefined data and strings", "Detect and label crypto constants",
 		                       "Detect and comment stack strings","Detect and label indirect string references",
-		                       "Detect and label indirect function calls","Rename Functions Based on string references"])
+		                       "Detect and label indirect function calls","Rename Functions Based on string references",
+		                       "Bookmark String Hints"])
 
 		if 0 in choices:
 			fixMissingDisassembly()
@@ -651,6 +686,8 @@ if __name__ == '__main__':
 			detectIndirectFunctionReferences()
 		if 11 in choices:
 			renameFunctionsBasedOnStrRef()
+		if 12 in choices:
+			bookMarkStringHints()
 
 	except IllegalArgumentException as error:
 	    print error.toString()
