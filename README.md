@@ -53,7 +53,7 @@ Done!
 ![image](https://user-images.githubusercontent.com/22657154/73029551-6a45a680-3e40-11ea-83fb-a60800985146.png)
 
 #### Bookmark String Hints 
-![image](https://user-images.githubusercontent.com/22657154/73776096-d228b500-478f-11ea-865e-fab4b4c5ddae.png)
+![image](https://user-images.githubusercontent.com/22657154/73776985-54fe3f80-4791-11ea-976e-c95ce9e709d4.png)
 
 ## BUG? OPEN NEW ISSUE   
 https://github.com/reb311ion/replica/issues
