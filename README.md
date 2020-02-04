@@ -15,6 +15,8 @@ Search for replica and enable `in tool` option
 Done!
 ![image](https://user-images.githubusercontent.com/22657154/72688313-6d722700-3b0e-11ea-95f6-2d27519ca9fd.png)
 
+![image](https://user-images.githubusercontent.com/22657154/73777200-bcb48a80-4791-11ea-8f8c-7dec1aadc5d7.png)
+
 ### Features 
 #### Disassemble missed instructions
 ![72688789-73b6d200-3b13-11ea-9120-5ee1b4f68b1b](https://user-images.githubusercontent.com/22657154/72689004-6dc1f080-3b15-11ea-8180-0dc1d10c74d0.png)
