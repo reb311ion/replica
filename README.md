@@ -1,6 +1,6 @@
 ![version](https://img.shields.io/badge/version-v0.1.0-green.svg) 
 ![License](https://img.shields.io/badge/license-GPLv3-blue.svg)
-![Features](https://img.shields.io/badge/Features-12-red.svg)
+![Features](https://img.shields.io/badge/Features-13-red.svg)
 # REPLICA - TAME THE DRAGON
 ![image](https://user-images.githubusercontent.com/22657154/73030070-80a03200-3e41-11ea-89a9-7c96b046667d.png)
 ---
