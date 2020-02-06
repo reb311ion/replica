@@ -329,15 +329,15 @@ def detectUndefinedFunctions():
 	            createFunction(instAddr,"FUN_" + addressString)
 	            createdFunction        = getFunctionAt(instAddr)
 	            if createdFunction != None:
-		            code, start, end = disasFun(createdFunction.getEntryPoint(),True)
-		            minAddr, maxAddr = getFunctionStartEnd(createdFunction)
-		            try:
-		                if maxAddr >= end:
-		                    print("[+] Created Function: " + "FUN_" + addressString)
-		                else:
+					try:	            	
+						code, start, end = disasFun(createdFunction.getEntryPoint(),True)
+						minAddr, maxAddr = getFunctionStartEnd(createdFunction)
+						if maxAddr >= end:
+						    print("[+] Created Function: " + "FUN_" + addressString)
+						else:
 							removeFunction(createdFunction)
-		            except:
-		                pass
+					except:
+					    pass
 
 # the decompiler was slower so it was replaced with renameFunctionsBasedOnStrRef function.
 def renameFunctionsBasedOnstringRefrencesUsingTheDecompiler():
