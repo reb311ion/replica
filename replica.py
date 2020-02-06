@@ -70,34 +70,34 @@ def getDataType(dataType):
 			return dt
 	return None  
 
-def getFunctionStartEnd(function):
-	functionBody = function.getBody().toList()
-	minAddress = int("0x" + functionBody[0].minAddress.toString(),16)
-	if len(functionBody) > 1:
-		maxAddress = int("0x" + functionBody[-1].maxAddress.toString(),16)
-	else:
-		maxAddress = int("0x" + functionBody[0].maxAddress.toString(),16)	
-	return minAddress,maxAddress
+def addrToInt(addr):
+	return int("0x" + addr.toString(),16)
 
-def isValidEnd(instruction):
-    if instruction.isInDelaySlot():
-        instruction = getInstructionAt(instruction.getFallFrom())
-    if instruction.getFlowType() == FlowType.TERMINATOR:
-        return True
-    return False
-
-def disasFun(addr):
+def disasFun(addr,getBody=False):
 	code         = ""
 	programList  = currentProgram.getListing()
 	function     = getFunctionContaining(addr)
-	instruction  = programList.getInstructionAt(function.getEntryPoint())
+	start        = function.getEntryPoint()
+	instruction  = programList.getInstructionAt(start)
 	while instruction:
 	    mnemonic = instruction.mnemonicString
 	    code += instruction.address.toString() + " " + instruction.toString()
 	    code += "\n"
 	    if isValidEnd(instruction):
-	    	return code
+	    	if getBody:
+	    		end = instruction.address
+	    		return code,addrToInt(start),addrToInt(end)
+	    	else:
+	    		return code
 	    instruction = instruction.next
+
+
+
+def getFunctionStartEnd(function):
+	functionBody = function.getBody().toList()
+	start        = addrToInt(functionBody[0].minAddress)
+	end          = addrToInt(functionBody[-1].maxAddress)	
+	return start,end
 
 def isWrapperFunction(function):
 	programList  = currentProgram.getListing()
@@ -128,8 +128,10 @@ def checkString(addr):
     return None
 
 def getaddressListFromDisas(code):
-    pattern = "0x[a-fA-F0-9]{6,}"
-    return re.findall(pattern,code)
+	if code == None:
+		return None
+	pattern = "0x[a-fA-F0-9]{6,}"
+	return re.findall(pattern,code)
 
 def setcommnet(addr,msg):
 	listing = currentProgram.getListing()
@@ -312,22 +314,30 @@ def detectUndefinedFunctions():
      programList  = currentProgram.getListing()
      instruction  = programList.getInstructions(1)
      while instruction.hasNext() and not monitor.isCancelled():
-        inst = instruction.next()
-        addressString = inst.getAddress().toString()
+        inst          = instruction.next()
+        instAddr      = inst.getAddress()
+        addressString = instAddr.toString()
         mnemonic      = inst.getMnemonicString()
-        x86Fun        = (inst.toString() == "PUSH EBP" and inst.next.toString() == "MOV EBP,ESP")
-        x64Fun        = (inst.toString() == "PUSH RBP" and inst.next.toString() == "MOV RBP,RSP")
-        if getFunctionAt(inst.getAddress()) == None and (x86Fun or x64Fun):
-            createFunction(inst.getAddress(),"FUN_" + addressString)
-            createdFunction        = getFunctionAt(inst.getAddress())
-            minAddress, maxAddress = getFunctionStartEnd(createdFunction)
-            try:
-                if isValidEnd(getInstructionAt(toAddr(maxAddress))):
-                    print("[+] Created Function: " + "FUN_" + addressString)
-                else:
-                    removeFunction(createdFunction)
-            except:
-                pass
+        instref       = getReferencesTo(instAddr)
+        if instref.tolist() != []:
+        	isCalled  = False
+        	for ref in instref:
+        		if ref.getReferenceType().isCall() or ref.getReferenceType().isData():
+        			isCalled = True
+        			break
+	        if getFunctionAt(instAddr) == None and isCalled:
+	            createFunction(instAddr,"FUN_" + addressString)
+	            createdFunction        = getFunctionAt(instAddr)
+	            if createdFunction != None:
+		            code, start, end = disasFun(createdFunction.getEntryPoint(),True)
+		            minAddr, maxAddr = getFunctionStartEnd(createdFunction)
+		            try:
+		                if maxAddr >= end:
+		                    print("[+] Created Function: " + "FUN_" + addressString)
+		                else:
+							removeFunction(createdFunction)
+		            except:
+		                pass
 
 # the decompiler was slower so it was replaced with renameFunctionsBasedOnStrRef function.
 def renameFunctionsBasedOnstringRefrencesUsingTheDecompiler():
@@ -620,6 +630,12 @@ def createBookMark(addr,category,description):
     bm = currentProgram.getBookmarkManager()
     bm.setBookmark(addr,"Info",category,description)
 
+def isRef(addr,hint):
+	if getReferencesTo(addr).tolist() != []:
+		return "Referenced " + hint
+	else:
+		return hint
+
 def bookMarkStringHints():
 	monitor.setMessage("Book Marking String Hint")	
 	listing      = currentProgram.getListing()
@@ -638,14 +654,14 @@ def bookMarkStringHints():
 				for value in stringHint[hint]:
 					if hint == "Extension Hint":
 						if matchStr.endswith(value) or (value + " ") in matchStr:
+							hint = isRef(data.getAddress(),hint)
 							createBookMark(data.getAddress(),"Replica",hint)
 							print "[+] " + hint + ": " + repr(matchStr)				 
 					else:
 						if value == matchStr or (len(value) >= 6 and value in matchStr):
+							hint = isRef(data.getAddress(),hint)							
 							createBookMark(data.getAddress(),"Replica",hint)
 							print "[+] " + hint + ": " + repr(matchStr)						    	
-
-
 
 	return 0
 
