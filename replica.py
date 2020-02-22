@@ -43,7 +43,8 @@ from ghidra.program.model.symbol import FlowType
 from data import *
 from ghidra.program.model.symbol.SourceType import *
 from ghidra.program.model.symbol.SymbolUtilities import *
-
+from ghidra.program.model.data import ArrayDataType
+from ghidra.program.model.data import PointerDataType
 
 try: 
 	open(dbPath).read()
@@ -54,21 +55,7 @@ except:
 	db.write("\n\n")
 	db.write("dbPath = r'" + dbPath + "'")
 	db.close()
-
-def getDataType(dataType):
-	tool = state.getTool()
-	service = tool.getService(DataTypeManagerService)
-	dataTypeManagers = service.getDataTypeManagers()
-	for manager in dataTypeManagers:
-		dt = manager.getDataType(dataType.replace(" ","").replace("*",""))
-		if dt != None: 
-			if "*" in dataType:
-				for i in range(len(re.findall(r"\*",str(dataType)))):
-					dt = manager.getPointer(dt)
-			else:
-					pass
-			return dt
-	return None  
+ 
 
 def addrToInt(addr):
 	return int("0x" + addr.toString(),16)
@@ -254,18 +241,37 @@ def recoverStackString(addr):
     maxaddr = inst.address
   return stackStr,str(maxaddr)
 
-def getDataTypeWrap(dt):
+def getDataType(dataType,isArr=False,elm=0):
+	tool = state.getTool()
+	service = tool.getService(DataTypeManagerService)
+	dataTypeManagers = service.getDataTypeManagers()
+	for manager in dataTypeManagers:
+		dt = manager.getDataType(dataType.replace(" ","").replace("*",""))
+		if dt != None: 
+			if "*" in dataType:
+				for i in range(str(dataType).count("*")):
+					dt = manager.getPointer(dt)
+			if isArr:
+				if type(dt) == PointerDataType:
+					ln = dt.getDataType().getLength()
+				else:
+					ln = dt.getLength()
+				dt = ArrayDataType(dt,elm,ln)
+			return dt
+	return None 
+
+def getDataTypeWrap(dt,isArr=False,elm=0):
 	ptr = ""
-	if len(dt) > 1:
-		ptr = " " + dt[1:]
+	if "*" in dt:
+		ptr = " " + ('*' * dt.count("*"))
 	if "1" in dt:
-		dt = getDataType("/byte" + ptr)
+		dt = getDataType("/char"  + ptr, isArr, elm)
 	elif "2" in dt:
-		dt = getDataType("/word" + ptr)
+		dt = getDataType("/short" + ptr, isArr, elm)
 	elif "4" in dt:
-		dt = getDataType("/dword" + ptr)
+		dt = getDataType("/int"   + ptr, isArr, elm)
 	elif "8" in dt:
-		dt = getDataType("/qword" + ptr)
+		dt = getDataType("/long"  + ptr, isArr, elm)
 	else:
 		return None
 	return dt
@@ -273,16 +279,62 @@ def getDataTypeWrap(dt):
 def fixUndefinedDataTypes():
 	monitor.setMessage("Fixing Undefined Data Types")	
 	function =  getFirstFunction()
+	decompinterface = DecompInterface()
+	decompinterface.openProgram(currentProgram)
+
+    # get var list from decompilation
 	while function is not None:
+		prt 	   = False
+		varList    = []
+		try:
+			tokengrp   = decompinterface.decompileFunction(function, 0, ConsoleTaskMonitor())
+			code       = tokengrp.getDecompiledFunction().getC()
+			for line in code.split("\n"):
+				if line == "  \r":
+					break
+				if prt:
+					varList.append(filter(None,line.split(";")[0].split(" ")))
+				if line.startswith("{"):
+					prt = True   
+		except:
+			pass
+
 		for var in function.getAllVariables():
-			varBefore = str(var)
-			dt = str(var.getDataType())
+			varMsg = str(var)
+			dt  = str(var.getDataType())
+			inx = 0
 			if "undefined" in dt:
-				dt = dt.replace("undefined","")
-				dt = getDataTypeWrap(dt)
+				for decVar in varList:
+					if len(decVar) > 1:
+						arr = False
+						if len(decVar) == 3:
+							arr = True
+							inx = int(decVar[2].split("[")[1].split("]")[0])
+						if decVar[1].replace("*","") == var.getName():		
+							if not "undefined" in decVar[0]:
+								if '*' in decVar[1]:
+									dt = getDataType("/" + decVar[0] + " " + ('*' * decVar[1].count("*")),arr,inx)
+								else:								
+									dt = getDataType("/" + decVar[0],arr,inx)
+							else:							
+								if '*' in decVar[1]:
+									dtlen = decVar[0].replace("undefined","")
+									if dtlen == "":
+										dtlen = "1"
+									dt = getDataTypeWrap(dtlen + ('*' * decVar[1].count("*")),arr,inx)
+								else:
+									dt = getDataTypeWrap(decVar[0],arr,inx)
+
+				if type(dt) == str:
+					dt = str(var.getDataType())
+					dt = dt.replace("undefined","")
+					dt = getDataTypeWrap(dt)
 				if dt:
-					var.setDataType(dt,USER_DEFINED)
-					print "[+] " + str(function.getName()) + ": " + varBefore + " -> " + str(dt)
+					try:
+						var.setDataType(dt,USER_DEFINED)
+						print "[+] " + str(function.getName()) + ": " + varMsg + " -> " + str(dt)
+					except:
+						pass
 		function = getFunctionAfter(function)
 	return 0
 
@@ -593,9 +645,11 @@ def detectStackStrings():
 
 def fixUndefinedData():
     data_sections = []
-    addr_factory = currentProgram.getAddressFactory()
+    addr_factory   = currentProgram.getAddressFactory()
     memory_manager = currentProgram.getMemory()
     address_ranges = memory_manager.getLoadedAndInitializedAddressSet()
+    is64Bit        = "64" in currentProgram.language.toString()
+
     executable_set = memory_manager.getExecuteSet()
     addr_view = address_ranges.xor(executable_set)
     for section in addr_view:
@@ -604,25 +658,38 @@ def fixUndefinedData():
 
     for section in data_sections:
         print '[+] Section {} - {}'.format(section.getMinAddress(),section.getMaxAddress())
-        start_addr = section.getMinAddress()
-        end_addr = section.getMaxAddress()
-        strings = findStrings(section, 1, 1, True, True)
-        for string in strings:
-            if getUndefinedDataAt(string.getAddress()):
-                try:
-                    createAsciiString(string.getAddress())
-                except:
-                    continue
+        startAddr = section.getMinAddress()
+        endAddr   = section.getMaxAddress()
 
-        undefined_data = getUndefinedDataAt(start_addr)
-        if undefined_data is None:
-            undefined_data = getUndefinedDataAfter(start_addr)
+        for addr in range(addrToInt(startAddr),addrToInt(endAddr)):
+        	try:
+	        	addr = toAddr(addr)
+	        	if getSymbolAt(addr).getSymbolType().toString() == "Label" and (getByte(addr) > 31 and getByte(addr) < 128):
+	        		enc = 1
+	        		while True:
+	        			addrPlus = toAddr(addrToInt(addr) + enc)
+	        			addrByte = getByte(addrPlus)
+	        			if not (((addrByte > 31 and addrByte < 128) or addrByte == 0) and getSymbolAt(addrPlus) == None):
+	        				break
+	        			enc += 1
+	        		if enc >= 4:
+	        				createAsciiString(addr,enc)
+	        except:
+	        	continue
 
-        while undefined_data is not None and undefined_data.getAddress() < end_addr:
-            undefined_addr = undefined_data.getAddress()
-            undefined_data = getUndefinedDataAfter(undefined_addr)
+        undefinedData = getUndefinedDataAt(startAddr)
+        if undefinedData is None:
+            undefinedData = getUndefinedDataAfter(startAddr)
+
+        while undefinedData is not None and undefinedData.getAddress() < endAddr:
+            undefinedAddr = undefinedData.getAddress()
+            undefinedData = getUndefinedDataAfter(undefinedAddr)
             try:
-                createDWord(undefined_addr)
+            	if is64Bit:
+                	createQWord(undefinedAddr)
+                else:
+                	createDWord(undefinedAddr)
+
             except:
                 continue
 
@@ -647,7 +714,7 @@ def bookMarkStringHints():
 	while (dataIterator.hasNext() and not monitor.isCancelled()):
 		data     = dataIterator.next()
 		strType  = data.getDataType().getName().lower()
-		matchStr = data.getValue()
+		matchStr = str(data.getValue())
 		bmb      = False
 		if ("unicode" in strType or "string" in strType) and matchStr:
 			for hint in stringHint.keys():
