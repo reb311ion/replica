@@ -215,7 +215,7 @@ def findAllReferences(addr, taskMonitor):
 def getWrapperFunctionName(functionName):
     if "rep_wrap" in functionName:
     	wrapNumber = int(functionName.split("_")[2]) + 1
-    	return "rep_wrap_" + str(wrapNumber) + "_" + "".join(functionName.split("_")[3:])
+    	return "rep_wrap_" + str(wrapNumber) + "_" + "_".join(functionName.split("_")[3:])
     else:
     	return "rep_wrap_0_" + functionName
 
