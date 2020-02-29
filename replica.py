@@ -308,8 +308,11 @@ def fixUndefinedDataTypes():
 					if len(decVar) > 1:
 						arr = False
 						if len(decVar) == 3:
-							arr = True
-							inx = int(decVar[2].split("[")[1].split("]")[0])
+							try:
+								arr = True
+								inx = int(decVar[2].split("[")[1].split("]")[0])
+							except:
+								arr = False
 						if decVar[1].replace("*","") == var.getName():		
 							if not "undefined" in decVar[0]:
 								if '*' in decVar[1]:
