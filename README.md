@@ -18,6 +18,23 @@ Done!
 ![image](https://user-images.githubusercontent.com/22657154/73777200-bcb48a80-4791-11ea-8f8c-7dec1aadc5d7.png)
 
 ### Features 
+
+✔ Disassemble missed instructions
+✔ Detect and fix missed functions
+✔ Fix 'undefined' datatypes
+✔ Set MSDN API info as comments
+✔ Tag Functions based on API calls
+✔ Detect and mark wrapper functions
+✔ Fix undefined data and strings
+✔ Detect and label crypto constants
+✔ Detect and comment stack strings
+✔ Detect and label indirect string references
+✔ Detect and label indirect function calls
+✔ Rename Functions Based on string references
+✔ Bookmark String Hints 
+
+### Screenshots
+
 #### Disassemble missed instructions
 ![72688789-73b6d200-3b13-11ea-9120-5ee1b4f68b1b](https://user-images.githubusercontent.com/22657154/72689004-6dc1f080-3b15-11ea-8180-0dc1d10c74d0.png)
 
