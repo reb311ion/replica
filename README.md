@@ -20,17 +20,29 @@ Done!
 ### Features 
 
 ✔ Disassemble missed instructions
+
 ✔ Detect and fix missed functions
+
 ✔ Fix 'undefined' datatypes
+
 ✔ Set MSDN API info as comments
+
 ✔ Tag Functions based on API calls
+
 ✔ Detect and mark wrapper functions
+
 ✔ Fix undefined data and strings
+
 ✔ Detect and label crypto constants
+
 ✔ Detect and comment stack strings
+
 ✔ Detect and label indirect string references
+
 ✔ Detect and label indirect function calls
+
 ✔ Rename Functions Based on string references
+
 ✔ Bookmark String Hints 
 
 ### Screenshots
