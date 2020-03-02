@@ -20,71 +20,44 @@ Done!
 ### Features 
 
 ✔ Disassemble missed instructions
-
-✔ Detect and fix missed functions
-
-✔ Fix 'undefined' datatypes
-
-✔ Set MSDN API info as comments
-
-✔ Tag Functions based on API calls
-
-✔ Detect and mark wrapper functions
-
-✔ Fix undefined data and strings
-
-✔ Detect and label crypto constants
-
-✔ Detect and comment stack strings
-
-✔ Detect and label indirect string references
-
-✔ Detect and label indirect function calls
-
-✔ Rename Functions Based on string references
-
-✔ Bookmark String Hints 
-
-### Screenshots
-
-#### Disassemble missed instructions
 ![72688789-73b6d200-3b13-11ea-9120-5ee1b4f68b1b](https://user-images.githubusercontent.com/22657154/72689004-6dc1f080-3b15-11ea-8180-0dc1d10c74d0.png)
 
-#### Detect and fix missed functions
+✔ Detect and fix missed functions
 ![image](https://user-images.githubusercontent.com/22657154/72689012-83cfb100-3b15-11ea-9dc2-90d4e54f8d26.png)
 
-#### Fix 'undefined' datatypes
+✔ Fix 'undefined' datatypes
 ![image](https://user-images.githubusercontent.com/22657154/72689156-2b99ae80-3b17-11ea-8a58-1daeede847b4.png)
 
-#### Set MSDN API info as comments
+✔ Set MSDN API info as comments
 ![image](https://user-images.githubusercontent.com/22657154/72838884-dd60e880-3c99-11ea-9011-a9e33698a23e.png)
 
-#### Tag Functions based on API calls
+✔ Tag Functions based on API calls
 ![image](https://user-images.githubusercontent.com/22657154/72840666-66c5ea00-3c9d-11ea-95c8-ef044aa2abab.png)
 
-#### Detect and mark wrapper functions
+✔ Detect and mark wrapper functions
 ![image](https://user-images.githubusercontent.com/22657154/72841403-f4eea000-3c9e-11ea-84b2-003cbf36de69.png)
 
-#### Fix undefined data and strings
+✔ Fix undefined data and strings
 ![image](https://user-images.githubusercontent.com/22657154/72843903-2158eb00-3ca4-11ea-9176-69e962c75313.png)
 
-#### Detect and label crypto constants
+✔ Detect and label crypto constants
 ![image](https://user-images.githubusercontent.com/22657154/72991808-54fa5900-3dfb-11ea-8fc8-fc1e312b6546.png)
 
-#### Detect and comment stack strings
+✔ Detect and comment stack strings
 ![image](https://user-images.githubusercontent.com/22657154/72989797-a4d72100-3df7-11ea-8449-45ee8e3347e9.png)
 
-#### Detect and label indirect string references
+✔ Detect and label indirect string references
 ![image](https://user-images.githubusercontent.com/22657154/72994771-67c35c80-3e00-11ea-93ff-cba2663ce03c.png)
 
-#### Detect and label indirect function calls
+✔ Detect and label indirect function calls
 ![image](https://user-images.githubusercontent.com/22657154/73029636-99f4ae80-3e40-11ea-9149-46d4c536dcb0.png)
 
-#### Rename Functions Based on string references
+✔ Rename Functions Based on string references
 ![image](https://user-images.githubusercontent.com/22657154/73029551-6a45a680-3e40-11ea-83fb-a60800985146.png)
 
-#### Bookmark String Hints 
+✔ Bookmark String Hints 
 ![image](https://user-images.githubusercontent.com/22657154/73776985-54fe3f80-4791-11ea-976e-c95ce9e709d4.png)
+
 
 ## BUG? OPEN NEW ISSUE   
 https://github.com/reb311ion/replica/issues
