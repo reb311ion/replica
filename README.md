@@ -1,10 +1,58 @@
-![version](https://img.shields.io/badge/version-v0.1.0-green.svg) 
-![License](https://img.shields.io/badge/license-GPLv3-blue.svg)
-![Features](https://img.shields.io/badge/Features-13-red.svg)
-# REPLICA - TAME THE DRAGON
-![image](https://user-images.githubusercontent.com/22657154/73030070-80a03200-3e41-11ea-89a9-7c96b046667d.png)
----
-### START
+<h1 align="center"> REPLICA</h1>
+<div align="center">
+ <img src="logo.png" alt="Example" width="300" height="150"> 
+  <p>
+  <strong>
+  TAME THE DRAGON
+  </strong>
+ </p>
+</div>
+<div align="center">
+  <!-- Crates version -->
+  <a >
+    <img src="https://img.shields.io/badge/version-v1.0.0-green.svg"
+  </a>
+  <a >
+    <img src="https://img.shields.io/badge/license-GPLv3-blue.svg"
+  </a>
+  <a >
+    <img src="https://img.shields.io/badge/Features-13-red.svg"
+  </a>
+  </a>
+</div>
+
+
+
+
+## ✨Features
+
+⚡ Disassemble missed instructions - Define code that Ghidra's auto analysis missed
+
+⚡ Detect and fix missed functions - Define functions that Ghidra's auto analysis missed
+
+⚡ Fix 'undefinedN' datatypes - Enhance Disassembly and Decompilation by fixing 'undefinedN' DataTypes 
+
+⚡ Set MSDN API info as comments - Integrate information about functions, arguments and return values into Ghidra's disassembly listing in the form of comments
+
+⚡ Tag Functions based on API calls - rename functions that calls one or more APIs with the API name and API type family if available
+
+⚡ Detect and mark wrapper functions - Rename wrapper functions with the wrapping level and wrapped function name 
+
+⚡ Fix undefined data and strings - Defines ASCII strings that Ghidra's auto analysis missed and Converts undefined bytes in the data segment into DWORDs/QWORDs 
+
+⚡ Detect and label crypto constants - Searche and label constants known to be associated with cryptographic algorithm in the code
+
+⚡ Detect and comment stack strings - Find and post-comment stack strings 
+
+⚡ Detect and label indirect string references - find and label references to existing strings
+
+⚡ Detect and label indirect function calls - find and label references to existing functions
+
+⚡ Rename Functions Based on string references - rename functions that references one or more strings with the function name followed by the string name.
+
+⚡ Bookmark String Hints - Bookmark intersting strings (file extensions, browser agents, registry keys, etc..)
+
+## 🚀 Installation:
 Copy the repository files into any of `ghidra_scripts` directories and extract `db.7z`, directories can be found from `Window->Script Manager->Script Directories`
 
 ![image](https://user-images.githubusercontent.com/22657154/72688222-becde680-3b0d-11ea-8fb2-b9baa0239042.png)
@@ -17,47 +65,11 @@ Done!
 
 ![image](https://user-images.githubusercontent.com/22657154/73777200-bcb48a80-4791-11ea-8f8c-7dec1aadc5d7.png)
 
-### Features 
-
-✔ Disassemble missed instructions
-![72688789-73b6d200-3b13-11ea-9120-5ee1b4f68b1b](https://user-images.githubusercontent.com/22657154/72689004-6dc1f080-3b15-11ea-8180-0dc1d10c74d0.png)
-
-✔ Detect and fix missed functions
-![image](https://user-images.githubusercontent.com/22657154/72689012-83cfb100-3b15-11ea-9dc2-90d4e54f8d26.png)
-
-✔ Fix 'undefined' datatypes
-![image](https://user-images.githubusercontent.com/22657154/72689156-2b99ae80-3b17-11ea-8a58-1daeede847b4.png)
-
-✔ Set MSDN API info as comments
-![image](https://user-images.githubusercontent.com/22657154/72838884-dd60e880-3c99-11ea-9011-a9e33698a23e.png)
-
-✔ Tag Functions based on API calls
-![image](https://user-images.githubusercontent.com/22657154/72840666-66c5ea00-3c9d-11ea-95c8-ef044aa2abab.png)
-
-✔ Detect and mark wrapper functions
-![image](https://user-images.githubusercontent.com/22657154/72841403-f4eea000-3c9e-11ea-84b2-003cbf36de69.png)
-
-✔ Fix undefined data and strings
-![image](https://user-images.githubusercontent.com/22657154/72843903-2158eb00-3ca4-11ea-9176-69e962c75313.png)
-
-✔ Detect and label crypto constants
-![image](https://user-images.githubusercontent.com/22657154/72991808-54fa5900-3dfb-11ea-8fc8-fc1e312b6546.png)
-
-✔ Detect and comment stack strings
-![image](https://user-images.githubusercontent.com/22657154/72989797-a4d72100-3df7-11ea-8449-45ee8e3347e9.png)
-
-✔ Detect and label indirect string references
-![image](https://user-images.githubusercontent.com/22657154/72994771-67c35c80-3e00-11ea-93ff-cba2663ce03c.png)
-
-✔ Detect and label indirect function calls
-![image](https://user-images.githubusercontent.com/22657154/73029636-99f4ae80-3e40-11ea-9149-46d4c536dcb0.png)
-
-✔ Rename Functions Based on string references
-![image](https://user-images.githubusercontent.com/22657154/73029551-6a45a680-3e40-11ea-83fb-a60800985146.png)
-
-✔ Bookmark String Hints 
-![image](https://user-images.githubusercontent.com/22657154/73776985-54fe3f80-4791-11ea-976e-c95ce9e709d4.png)
 
 
-## BUG? OPEN NEW ISSUE   
-https://github.com/reb311ion/replica/issues
+## 🔒 License
+
+Licensed under [GNU General Public License v3.0](https://github.com/reb311ion/replica/blob/master/LICENSE)
+
+## ⛏️ BUG? OPEN NEW ISSUE   
+OPEN [NEW ISSUE](https://github.com/reb311ion/replica/issues) 
