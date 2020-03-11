@@ -26,38 +26,29 @@
 
 ## ✨Features
 
-⚡ Disassemble missed instructions - Define code that Ghidra's auto analysis missed
+- ⚡ Disassemble missed instructions - Define code that Ghidra's auto analysis missed
+- ⚡ Detect and fix missed functions - Define functions that Ghidra's auto analysis missed
+- ⚡ Fix 'undefinedN' datatypes - Enhance Disassembly and Decompilation by fixing 
+        'undefinedN' DataTypes 
+- ⚡ Set MSDN API info as comments - Integrate information about functions, arguments
+        and return values into Ghidra's disassembly listing in the form of comments
+- ⚡ Tag Functions based on API calls - rename functions that calls one or more APIs with
+        the API name and API type family if available
+- ⚡ Detect and mark wrapper functions - Rename wrapper functions with the wrapping
+        level and wrapped function name 
+- ⚡ Fix undefined data and strings - Defines ASCII strings that Ghidra's auto analysis 
+        missed and Converts undefined bytes in the data segment into DWORDs/QWORDs 
+- ⚡ Detect and label crypto constants - Searche and label constants known to be associated
+        with cryptographic algorithm in the code
+- ⚡ Detect and comment stack strings - Find and post-comment stack strings 
 
-⚡ Detect and fix missed functions - Define functions that Ghidra's auto analysis missed
+- ⚡ Detect and label indirect string references - find and label references to existing strings
 
-⚡ Fix 'undefinedN' datatypes - Enhance Disassembly and Decompilation by fixing 
-      'undefinedN' DataTypes 
+- ⚡ Detect and label indirect function calls - find and label references to existing functions
 
-⚡ Set MSDN API info as comments - Integrate information about functions, arguments
-      and return values into Ghidra's disassembly listing in the form of comments
-
-⚡ Tag Functions based on API calls - rename functions that calls one or more APIs with
-      the API name and API type family if available
-
-⚡ Detect and mark wrapper functions - Rename wrapper functions with the wrapping
-      level and wrapped function name 
-
-⚡ Fix undefined data and strings - Defines ASCII strings that Ghidra's auto analysis 
-      missed and Converts undefined bytes in the data segment into DWORDs/QWORDs 
-
-⚡ Detect and label crypto constants - Searche and label constants known to be associated
-      with cryptographic algorithm in the code
-
-⚡ Detect and comment stack strings - Find and post-comment stack strings 
-
-⚡ Detect and label indirect string references - find and label references to existing strings
-
-⚡ Detect and label indirect function calls - find and label references to existing functions
-
-⚡ Rename Functions Based on string references - rename functions that references one
-      or more strings with the function name followed by the string name.
-
-⚡ Bookmark String Hints - Bookmark intersting strings (file extensions, browser agents, registry keys, etc..)
+- ⚡ Rename Functions Based on string references - rename functions that references one
+        or more strings with the function name followed by the string name.
+- ⚡ Bookmark String Hints - Bookmark intersting strings (file extensions, browser agents, registry keys, etc..)
 
 ## 🚀 Installation:
 Copy the repository files into any of `ghidra_scripts` directories and extract `db.7z`, directories can be found from `Window->Script Manager->Script Directories`
