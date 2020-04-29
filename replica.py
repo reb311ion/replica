@@ -738,7 +738,7 @@ def bookMarkStringHints():
 if __name__ == '__main__':
 	try:
 
-		choices = askChoices("Choices 2", "Please choose from Analysis Options.", 
+		choices = askChoices("Choices", "Please choose from Analysis Options.", 
 		                      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
 		                      ["Disassemble missed  instructions", "Detect and fix missed  functions",
 		                       "Fix undefined datatypes","Set MSDN API info as comments", 
