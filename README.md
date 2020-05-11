@@ -41,11 +41,6 @@
 - ⚡ Detect and label crypto constants - Searche and label constants known to be associated
         with cryptographic algorithm in the code
 - ⚡ Detect and comment stack strings - Find and post-comment stack strings 
-
-- ⚡ Detect and label indirect string references - find and label references to existing strings
-
-- ⚡ Detect and label indirect function calls - find and label references to existing functions
-
 - ⚡ Rename Functions Based on string references - rename functions that references one
         or more strings with the function name followed by the string name.
 - ⚡ Bookmark String Hints - Bookmark intersting strings (file extensions, browser agents, registry keys, etc..)
