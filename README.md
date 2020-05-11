@@ -16,7 +16,7 @@
     <img src="https://img.shields.io/badge/license-GPLv3-blue.svg"
   </a>
   <a >
-    <img src="https://img.shields.io/badge/Features-13-red.svg"
+    <img src="https://img.shields.io/badge/Features-11-red.svg"
   </a>
   </a>
 </div>
