@@ -259,13 +259,13 @@ def getDataTypeWrap(dt, isArr=False, elm=0):
     if "*" in dt:
         ptr = " " + ('*' * dt.count("*"))
     if "1" in dt:
-        dt = getDataType("/char" + ptr, isArr, elm)
+        dt = getDataType("/byte" + ptr, isArr, elm)
     elif "2" in dt:
-        dt = getDataType("/short" + ptr, isArr, elm)
+        dt = getDataType("/word" + ptr, isArr, elm)
     elif "4" in dt:
-        dt = getDataType("/int" + ptr, isArr, elm)
+        dt = getDataType("/dword" + ptr, isArr, elm)
     elif "8" in dt:
-        dt = getDataType("/long" + ptr, isArr, elm)
+        dt = getDataType("/qword" + ptr, isArr, elm)
     else:
         return None
     return dt
